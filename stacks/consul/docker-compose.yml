@@ -1,0 +1,34 @@
+services:
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    restart: unless-stopped
+    command:
+      - agent
+      - -server
+      - -ui
+      - -bootstrap-expect=1
+      - -client=0.0.0.0
+      - -datacenter=local
+      - -domain=consul
+      - -node=consul-1
+    volumes:
+      - consul_data:/consul/data
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.consul.rule=Host(`consul.localhost`)"
+      - "traefik.http.routers.consul.entrypoints=web"
+      - "traefik.http.services.consul.loadbalancer.server.port=8500"
+
+volumes:
+  consul_data:
+
+networks:
+  traefik:
+    external: true

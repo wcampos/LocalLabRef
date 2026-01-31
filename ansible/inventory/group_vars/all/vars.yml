@@ -1,0 +1,8 @@
+---
+# Group variables for all hosts
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html
+
+# Mount volumes (optional - set for mount_volumes role)
+# data_uuid: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+# artifacts_uuid: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+# runners_uuid: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"

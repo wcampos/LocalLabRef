@@ -1,0 +1,18 @@
+pageInfo:
+  title: Local Dashboard
+  description: Infrastructure dashboard
+appConfig:
+  theme: default
+  layout: auto
+sections:
+  - name: Services
+    items:
+      - title: Traefik
+        url: http://traefik.localhost:8080
+        target: newtab
+      - title: Grafana
+        url: http://localhost:3000
+        target: newtab
+      - title: Prometheus
+        url: http://localhost:9090
+        target: newtab

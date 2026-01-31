@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  role_name: kubectl
+  description: kubectl CLI installation
+  license: MIT
+
+dependencies: []

@@ -1,0 +1,55 @@
+---
+# MicroK8s installation via snap
+# https://microk8s.io/docs
+
+- name: Check if snap is installed
+  ansible.builtin.command: which snap
+  register: snap_check
+  changed_when: false
+  failed_when: false
+
+- name: Install snapd
+  ansible.builtin.apt:
+    name: snapd
+    state: present
+    update_cache: yes
+  when: snap_check.rc != 0
+
+- name: Ensure snapd service is running
+  ansible.builtin.systemd:
+    name: snapd
+    enabled: yes
+    state: started
+  when: snap_check.rc != 0
+
+- name: Check if microk8s is installed
+  ansible.builtin.command: /usr/bin/snap list microk8s
+  register: microk8s_check
+  changed_when: false
+  failed_when: false
+  environment:
+    PATH: "{{ ansible_facts['env']['PATH'] | default('/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin') }}:/snap/bin"
+
+- name: Install microk8s
+  ansible.builtin.command: /usr/bin/snap install microk8s --classic
+  when: microk8s_check.rc != 0
+  environment:
+    PATH: "{{ ansible_facts['env']['PATH'] | default('/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin') }}:/snap/bin"
+
+- name: Add user to microk8s group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: yes
+
+- name: Enable microk8s addons
+  ansible.builtin.command: /snap/bin/microk8s enable {{ item }}
+  register: addon_result
+  changed_when: "'already enabled' not in addon_result.stdout"
+  failed_when: false
+  loop:
+    - dns
+    - storage
+    - ingress
+  environment:
+    PATH: "{{ ansible_facts['env']['PATH'] | default('/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin') }}:/snap/bin"

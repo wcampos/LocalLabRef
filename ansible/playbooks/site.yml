@@ -1,0 +1,36 @@
+---
+# Site playbook - main entry point
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html
+#
+# Usage:
+#   ansible-playbook playbooks/site.yml
+#   ansible-playbook playbooks/site.yml --tags docker,kubectl
+
+- name: Base system and Docker
+  hosts: local
+  become: yes
+  roles:
+    - role: common
+    - role: docker
+
+- name: Kubernetes tooling
+  hosts: local
+  become: yes
+  roles:
+    - role: kubectl
+    - role: microk8s
+
+- name: Ollama LLM server
+  hosts: local
+  become: yes
+  roles:
+    - role: ollama
+
+# Optional: mount volumes (set data_uuid, etc. in inventory/group_vars/all/vars.yml)
+# - name: Mount volumes
+#   hosts: local
+#   become: yes
+#   roles:
+#     - role: mount_volumes
+#   tags:
+#     - mount_volumes

@@ -1,0 +1,136 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: n8n
+  labels:
+    app.kubernetes.io/name: n8n
+    app.kubernetes.io/component: workflow
+    app.kubernetes.io/part-of: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: n8n
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: n8n
+        app.kubernetes.io/component: workflow
+        app.kubernetes.io/part-of: n8n
+    spec:
+      containers:
+        - name: n8n
+          image: n8nio/n8n:latest
+          env:
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: DB_TYPE
+            - name: DB_POSTGRESDB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: DB_POSTGRESDB_HOST
+            - name: DB_POSTGRESDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: DB_POSTGRESDB_DATABASE
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-postgres
+                  key: POSTGRES_USER
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-postgres
+                  key: POSTGRES_PASSWORD
+            - name: N8N_BASIC_AUTH_ACTIVE
+              value: "true"
+            - name: N8N_BASIC_AUTH_USER
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-auth
+                  key: N8N_BASIC_AUTH_USER
+            - name: N8N_BASIC_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-auth
+                  key: N8N_BASIC_AUTH_PASSWORD
+            - name: N8N_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: N8N_HOST
+            - name: N8N_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: N8N_PORT
+            - name: N8N_PROTOCOL
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: N8N_PROTOCOL
+            - name: WEBHOOK_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: WEBHOOK_URL
+            - name: GENERIC_TIMEZONE
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: GENERIC_TIMEZONE
+            - name: N8N_DIAGNOSTICS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: n8n-config
+                  key: N8N_DIAGNOSTICS_ENABLED
+          ports:
+            - containerPort: 5678
+              name: http
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5678
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5678
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: pvc-n8n
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-n8n
+  namespace: n8n
+  labels:
+    app.kubernetes.io/name: n8n
+    app.kubernetes.io/component: storage
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi

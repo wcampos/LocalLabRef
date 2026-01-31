@@ -1,0 +1,20 @@
+---
+# Traefik IngressRoute for ArgoCD
+# Copy to ingressroute.yaml and customize domains
+# Requires Traefik CRD provider and cert-manager/Let's Encrypt
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`argocd.localhost.dev`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          port: 80
+  tls:
+    certResolver: letsencrypt

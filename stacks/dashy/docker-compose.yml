@@ -1,0 +1,26 @@
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+    restart: unless-stopped
+    volumes:
+      - dashy_data:/app/public
+      - ./config.yml:/app/user-data/conf.yml:ro
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=UTC
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashy.rule=Host(`dashy.localhost`)"
+      - "traefik.http.routers.dashy.entrypoints=web"
+      - "traefik.http.services.dashy.loadbalancer.server.port=8080"
+
+volumes:
+  dashy_data:
+
+networks:
+  traefik:
+    external: true

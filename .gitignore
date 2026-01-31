@@ -1,0 +1,21 @@
+# Environment files (may contain secrets)
+.env
+.env.*
+!.env.example
+
+# Ansible
+.ansible/
+*.retry
+
+# Kubernetes
+kubeconfig
+*.kubeconfig
+
+# Terraform / local state
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# OS
+.DS_Store
+Thumbs.db

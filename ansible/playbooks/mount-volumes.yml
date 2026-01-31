@@ -1,0 +1,12 @@
+---
+# Mount volumes playbook (optional)
+# Set data_uuid, artifacts_uuid, runners_uuid in inventory/group_vars/all/vars.yml
+#
+# Usage:
+#   ansible-playbook playbooks/mount-volumes.yml
+
+- name: Mount LVM volumes
+  hosts: local
+  become: yes
+  roles:
+    - role: mount_volumes

@@ -1,0 +1,10 @@
+---
+# Role metadata
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html
+
+galaxy_info:
+  role_name: common
+  description: Base system packages
+  license: MIT
+
+dependencies: []

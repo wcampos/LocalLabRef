@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n8n-config
+  namespace: n8n
+  labels:
+    app.kubernetes.io/name: n8n
+    app.kubernetes.io/component: config
+data:
+  DB_TYPE: postgresdb
+  DB_POSTGRESDB_HOST: postgres
+  DB_POSTGRESDB_DATABASE: n8n
+  N8N_HOST: n8n.localhost.dev
+  N8N_PORT: "5678"
+  N8N_PROTOCOL: https
+  WEBHOOK_URL: https://n8n.localhost.dev/
+  GENERIC_TIMEZONE: UTC
+  N8N_DIAGNOSTICS_ENABLED: "false"

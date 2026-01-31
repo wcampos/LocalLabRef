@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: ollama
+  description: Ollama LLM server
+  license: MIT
+
+dependencies:
+  - role: common

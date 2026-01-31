@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: docker
+  description: Docker CE installation
+  license: MIT
+
+dependencies:
+  - role: common

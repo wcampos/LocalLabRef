@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  role_name: microk8s
+  description: MicroK8s Kubernetes via snap
+  license: MIT
+
+dependencies:
+  - role: common

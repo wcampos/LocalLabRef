@@ -1,0 +1,28 @@
+---
+# Common base packages
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install base packages
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - pipx
+      - git
+    state: present
+
+- name: Ensure pipx bin directory is in PATH
+  ansible.builtin.shell: pipx ensurepath
+  changed_when: false

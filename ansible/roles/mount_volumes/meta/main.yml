@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  role_name: mount_volumes
+  description: Mount LVM volumes for data, artifacts, runners
+  license: MIT
+
+dependencies: []

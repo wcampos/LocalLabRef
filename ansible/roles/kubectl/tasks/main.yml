@@ -1,0 +1,33 @@
+---
+# kubectl installation
+# https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+- name: Get kubectl stable version
+  ansible.builtin.uri:
+    url: https://dl.k8s.io/release/stable.txt
+    return_content: yes
+  register: kubectl_version
+  changed_when: false
+
+- name: Set kubectl version fact
+  ansible.builtin.set_fact:
+    kubectl_version: "{{ kubectl_version.content | trim }}"
+
+- name: Check if kubectl is installed
+  ansible.builtin.command: which kubectl
+  register: kubectl_check
+  changed_when: false
+  failed_when: false
+
+- name: Get kubectl binary architecture
+  ansible.builtin.set_fact:
+    kubectl_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+
+- name: Download kubectl binary
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ kubectl_arch }}/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: '0755'
+    owner: root
+    group: root
+  when: kubectl_check.rc != 0

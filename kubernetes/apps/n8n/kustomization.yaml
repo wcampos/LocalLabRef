@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: n8n
+
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/part-of: n8n
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres-deployment.yaml
+  - postgres-service.yaml
+  - n8n-deployment.yaml
+  - n8n-service.yaml
+  - ingress.yaml
+
+# Create n8n-postgres and n8n-auth secrets before deploying (see secret.yaml.example)

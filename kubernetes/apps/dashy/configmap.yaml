@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashy-config
+  namespace: dashy
+  labels:
+    app.kubernetes.io/name: dashy
+    app.kubernetes.io/component: config
+data:
+  conf.yml: |
+    pageInfo:
+      title: Local Dashboard
+      description: Infrastructure dashboard
+    appConfig:
+      theme: default
+      layout: auto
+    sections:
+      - name: Services
+        items:
+          - title: Traefik
+            url: http://traefik.traefik:8080
+            target: newtab
+          - title: Grafana
+            url: http://grafana.observability:3000
+            target: newtab
+          - title: Prometheus
+            url: http://prometheus.observability:9090
+            target: newtab

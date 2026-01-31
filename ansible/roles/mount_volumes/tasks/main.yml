@@ -1,0 +1,30 @@
+---
+# Mount LVM/block volumes
+# Set data_uuid, artifacts_uuid, runners_uuid in group_vars or host_vars
+
+- name: Ensure mount points exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  loop:
+    - /data
+    - /artifacts
+    - /runners
+
+- name: Check if /data is mounted
+  ansible.builtin.command: mountpoint -q /data
+  register: data_mounted
+  changed_when: false
+  failed_when: false
+
+- name: Add /data to fstab and mount
+  ansible.posix.mount:
+    path: /data
+    src: "UUID={{ data_uuid }}"
+    fstype: ext4
+    opts: defaults,noatime
+    state: mounted
+  when: data_mounted.rc != 0 and data_uuid is defined

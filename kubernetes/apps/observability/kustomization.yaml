@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: observability
+
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/part-of: observability
+
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - prometheus-configmap.yaml
+  - prometheus-deployment.yaml
+  - loki-deployment.yaml
+  - tempo-deployment.yaml
+  - grafana-deployment.yaml
+  - node-exporter-daemonset.yaml
